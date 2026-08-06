@@ -22,7 +22,7 @@
 <article class="card">
 <h2>🎙 말로 노하우 등록하기</h2>
 <p style="margin-top:0;color:#537384">① 녹음 시작 → ② 말한 내용 확인 → ③ 노하우 등록</p>
-<button class="voice" id="voice">① 녹음 시작하기</button>
+<button class="voice" id="voice">① 음성 인식 시작하기</button>
 <div class="record" id="record">
 <div class="waves">
 <i>
@@ -35,9 +35,9 @@
 </i>
 <i>
 </i>
-</div>녹음 중입니다. 조업 경험을 말씀해 주세요.</div>
+</div>듣고 있습니다. 조업 경험을 말씀해 주세요.</div>
 </article>
-<article class="card" id="summaryCard" style="display:none"><h2>② 말한 내용 확인하기 <small>(시연용 예시)</small></h2><p><b>음성 인식 내용</b><br>“바람이 강한 날에는 출항 전 그물과 부표를 먼저 확인해야 합니다.”</p><p><b>노하우 제목</b><br><input value="바람이 강한 날 출항 전 점검" style="width:100%;padding:10px;border:1px solid #b7dbe7;border-radius:7px;font:inherit"></p><p><b>간단 요약</b><br>강한 바람이 예상되면 출항 전 그물과 부표 상태를 우선 점검합니다.</p><button id="register" style="width:100%;border:0;border-radius:8px;background:#087fb5;color:#fff;padding:13px;font-weight:800;font-size:1.05rem">③ 이 내용으로 노하우 등록하기</button><p id="saved" style="color:#0873a6;font-weight:800"></p></article>
+<article class="card" id="summaryCard" style="display:none"><h2>② 말한 내용 확인하기 <small>(무료 자동 정리)</small></h2><p><b>음성 인식 내용</b><br><textarea id="transcript" style="width:100%;min-height:90px;padding:10px;border:1px solid #b7dbe7;border-radius:7px;font:inherit"></textarea></p><p><b>노하우 제목</b><br><input id="title" value="오늘의 조업 노하우" style="width:100%;padding:10px;border:1px solid #b7dbe7;border-radius:7px;font:inherit"></p><p><b>자동 요약</b><br><textarea id="summary" style="width:100%;min-height:75px;padding:10px;border:1px solid #b7dbe7;border-radius:7px;font:inherit"></textarea></p><button id="register" style="width:100%;border:0;border-radius:8px;background:#087fb5;color:#fff;padding:13px;font-weight:800;font-size:1.05rem">③ 이 내용으로 노하우 등록하기</button><p id="saved" style="color:#0873a6;font-weight:800"></p></article>
 <article class="card">
 <h2>새 상담 신청 <small>(예시 신청자)</small>
 </h2>
@@ -57,6 +57,6 @@
 </div>
 </article>
 </main>
-<script>voice.onclick=()=>{record.classList.toggle('active');if(record.classList.contains('active')){summaryCard.style.display='none';voice.textContent='■ 녹음 멈추고 내용 확인하기'}else{voice.textContent='① 다시 녹음하기';summaryCard.style.display='block'}};register.onclick=()=>{saved.textContent='✓ 노하우가 등록되었습니다. 이제 귀어인이 이 경험을 찾아볼 수 있습니다. (시연용 예시 기능)';register.disabled=true;register.textContent='등록 완료'};document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{state.textContent='상담 신청을 '+b.dataset.d+'했습니다. (시연용 예시 기능)';request.style.opacity='.72'});</script>
+<script>const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;let recognition,heard='';function autoSummary(text){let sentences=text.split(/[.!?。]/).map(x=>x.trim()).filter(Boolean);return sentences.slice(0,2).join('. ')||text}voice.onclick=()=>{if(!Recognition){summaryCard.style.display='block';transcript.value='이 브라우저는 음성 인식을 지원하지 않습니다. 이곳에 직접 내용을 입력해 주세요.';summary.value='직접 입력한 조업 경험을 확인하고 필요한 준비 사항을 정리합니다.';voice.textContent='① 직접 입력으로 작성하기';return}if(!recognition){recognition=new Recognition();recognition.lang='ko-KR';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{heard=Array.from(e.results).map(r=>r[0].transcript).join(' ');record.textContent='듣고 있습니다. '+heard};recognition.onend=()=>{record.classList.remove('active');summaryCard.style.display='block';transcript.value=heard;summary.value=autoSummary(heard);title.value=(heard.split(/[,.]/)[0]||'오늘의 조업 노하우').slice(0,28);voice.textContent='① 다시 음성 인식하기'}}if(record.classList.contains('active')){recognition.stop();voice.textContent='내용을 정리하고 있습니다…'}else{heard='';recognition.start();record.classList.add('active');summaryCard.style.display='none';voice.textContent='■ 음성 인식 멈추기'}};register.onclick=()=>{let posts=JSON.parse(localStorage.getItem('badawikiPosts')||'[]');posts.unshift({title:title.value,transcript:transcript.value,summary:summary.value,createdAt:new Date().toLocaleString('ko-KR')});localStorage.setItem('badawikiPosts',JSON.stringify(posts));saved.textContent='✓ 노하우가 이 기기에 저장되었습니다. ('+posts.length+'개 저장됨)';register.textContent='등록 완료'};document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{state.textContent='상담 신청을 '+b.dataset.d+'했습니다. (시연용 예시 기능)';request.style.opacity='.72'});</script>
 </body>
 </html>
