@@ -1,5 +1,5 @@
 (()=>{
-  if(new URLSearchParams(location.search).has('resetDemo')){for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key&&key.startsWith('badawiki'))localStorage.removeItem(key)}location.replace(location.pathname);return}
+  if(new URLSearchParams(location.search).has('resetDemo')){for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key&&key.startsWith('badawiki'))localStorage.removeItem(key)}localStorage.setItem('badawikiMentorPointsByName',JSON.stringify({김영호:710,최도윤:710,박미숙:710,윤태식:710,이준석:710,정해원:710,한지훈:710,오세진:710,서은아:710,문성호:710,배수현:710,장민규:710}));location.replace(location.pathname);return}
   const form=document.querySelector('#authForm'); if(!form)return;
   const authLayer=document.querySelector('#authModal');
   /* 로그인 창 자체가 길어지면, 흰 창 위에서 드래그해 끝까지 내려갈 수 있게 합니다. */
