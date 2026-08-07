@@ -1,5 +1,11 @@
 (()=>{
   const form=document.querySelector('#authForm'); if(!form)return;
+  const authLayer=document.querySelector('#authModal');
+  authLayer.style.overflowY='auto';
+  authLayer.style.overscrollBehavior='contain';
+  form.style.maxHeight='calc(100vh - 40px)';
+  form.style.overflowY='auto';
+  form.style.overscrollBehavior='contain';
   const identity=document.createElement('div');
   identity.innerHTML='<label>실명</label><input id="authRealName" required placeholder="실명을 입력하세요" autocomplete="name"><label>휴대폰 번호</label><input id="authPhone" required placeholder="010-0000-0000" inputmode="tel" autocomplete="tel"><label>시연용 본인확인번호 7자리 <small>(실제 주민등록번호 입력 금지)</small></label><input id="authId7" required placeholder="숫자 7자리" inputmode="numeric" maxlength="7" autocomplete="off"><label>시연용 인증번호</label><input id="authCode" required placeholder="000000" inputmode="numeric" maxlength="6"><p class="notice">민감한 입력값은 저장·전송하지 않습니다. 시연용 인증번호는 000000입니다.</p>';
   form.insertBefore(identity,form.querySelector('label'));
