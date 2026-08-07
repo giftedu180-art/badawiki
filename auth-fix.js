@@ -10,6 +10,25 @@
   form.style.setProperty('overflow-y','visible','important');
   form.style.setProperty('margin','20px auto','important');
   form.style.setProperty('touch-action','pan-y','important');
+  /* 데스크톱에서도 흰 로그인 창의 빈 부분을 잡아 위·아래로 끌 수 있게 합니다. */
+  let dragStartY=null,dragStartScroll=0;
+  form.addEventListener('pointerdown',event=>{
+    if(event.button!==undefined&&event.button!==0)return;
+    if(event.target.closest('input,select,textarea,button'))return;
+    dragStartY=event.clientY;
+    dragStartScroll=authLayer.scrollTop;
+    form.setPointerCapture?.(event.pointerId);
+  });
+  form.addEventListener('pointermove',event=>{
+    if(dragStartY===null)return;
+    authLayer.scrollTop=dragStartScroll-(event.clientY-dragStartY);
+  });
+  const stopModalDrag=event=>{
+    dragStartY=null;
+    try{form.releasePointerCapture?.(event.pointerId)}catch(error){}
+  };
+  form.addEventListener('pointerup',stopModalDrag);
+  form.addEventListener('pointercancel',stopModalDrag);
   const identity=document.createElement('div');
   identity.innerHTML='<label>실명</label><input id="authRealName" required placeholder="실명을 입력하세요" autocomplete="name"><label>휴대폰 번호</label><input id="authPhone" required placeholder="010-0000-0000" inputmode="tel" autocomplete="tel"><label>시연용 본인확인번호 7자리 <small>(실제 주민등록번호 입력 금지)</small></label><input id="authId7" required placeholder="숫자 7자리" inputmode="numeric" maxlength="7" autocomplete="off"><label>시연용 인증번호</label><input id="authCode" required placeholder="000000" inputmode="numeric" maxlength="6"><p class="notice">민감한 입력값은 저장·전송하지 않습니다. 시연용 인증번호는 000000입니다.</p>';
   form.insertBefore(identity,form.querySelector('label'));
