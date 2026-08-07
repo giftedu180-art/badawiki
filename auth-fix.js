@@ -1,4 +1,5 @@
 (()=>{
+  if(new URLSearchParams(location.search).has('resetDemo')){for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key&&key.startsWith('badawiki'))localStorage.removeItem(key)}location.replace(location.pathname);return}
   const form=document.querySelector('#authForm'); if(!form)return;
   const authLayer=document.querySelector('#authModal');
   /* 로그인 창 자체가 길어지면, 흰 창 위에서 드래그해 끝까지 내려갈 수 있게 합니다. */
