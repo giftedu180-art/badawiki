@@ -16,4 +16,9 @@ const mentorPick=document.createElement('select');mentorPick.id='mentorPick';men
 </script><script>
 /* 시작 화면에 바로 보이는 포인트 충전 버튼과 상담 포인트 필수 규칙 */
 const startPoint=document.createElement('div');startPoint.className='point';startPoint.innerHTML='<h3>🪙 상담 포인트 <span id="startBalance">0P</span></h3><p class="note">상담 신청에는 감사 포인트 10P 이상이 필요합니다.</p><button class="buy" id="quickShop">포인트 충전·상점 바로가기</button>';document.querySelector('.welcome').insertBefore(startPoint,document.querySelector('.choices'));const refreshPoints=updatePoints;updatePoints=()=>{refreshPoints();startBalance.textContent=points+'P'};quickShop.onclick=()=>showStep('shopStep');consultPoint.value='10';consultPoint.querySelector('option[value="0"]').disabled=true;const sendConsult=consultForm.onsubmit;consultForm.onsubmit=e=>{e.preventDefault();const amount=Number(consultPoint.value);if(amount<10){formResult.textContent='상담 신청에는 감사 포인트 10P 이상을 제시해야 합니다.';return}sendConsult(e)};updatePoints();
+</script><script>
+/* 멘토 탐색과 상담 신청을 연결: 카드에서 바로 해당 멘토를 선택합니다. */
+function startConsult(name){mentorPick.value=name;showStep('consultStep');formResult.textContent=name+' 어업인에게 상담을 신청합니다. 감사 포인트 10P 이상을 제시해 주세요.'}
+const oldRender=render;render=()=>{oldRender();document.querySelectorAll('.card .consult').forEach((button,index)=>{const name=document.querySelectorAll('.card h2')[index]?.textContent.replace(' 어업인','');if(name){button.textContent='상담 신청 · 포인트 제시';button.onclick=()=>startConsult(name)}})};render();
+const freeNotice=document.createElement('p');freeNotice.className='note';freeNotice.innerHTML='<b>노하우 보기는 무료입니다.</b> 포인트는 멘토에게 상담을 신청할 때만 감사 보상으로 제시합니다.';document.querySelector('#searchStep').insertBefore(freeNotice,document.querySelector('#list'));
 </script></body></html>
